@@ -8,6 +8,8 @@ on:
 jobs:
   send-tidbits:
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}  # Will be available for all steps
     
     steps:
     - uses: actions/checkout@v3
@@ -22,12 +24,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests llm
         llm install llm-gemini
-    
-    - name: Configure LLM
-      env:
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      run: |
-        llm keys set gemini "$GEMINI_API_KEY"
       
     - name: Run tidbits script
       env:
