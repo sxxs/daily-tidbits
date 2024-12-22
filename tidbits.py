@@ -83,4 +83,4 @@ if __name__ == "__main__":
     GITHUB_README_URL = "https://raw.githubusercontent.com/trimstray/the-book-of-secret-knowledge/refs/heads/master/README.md"
     
     processor = SecretKnowledgeTidbits(GITHUB_README_URL)
-    processor.run(test_mode=True)
+    processor.run(test_mode=False)
