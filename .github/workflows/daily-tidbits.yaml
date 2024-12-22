@@ -9,7 +9,7 @@ jobs:
   send-tidbits:
     runs-on: ubuntu-latest
     env:
-      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}  # Will be available for all steps
+      LLM_GEMINI_KEY: ${{ secrets.GOOGLE_API_KEY }}  # Will be available for all steps
     
     steps:
     - uses: actions/checkout@v3
