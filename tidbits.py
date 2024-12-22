@@ -19,7 +19,7 @@ class SecretKnowledgeTidbits:
         
         prompt = f"""Go to this URL and read the content: {self.readme_url}
         
-        You are a helpful assistant that will extract and explain interesting tools/commands from the Book of Secret Knowledge README.
+        You are a helpful assistant that will extract and explain interesting tools/commands/falsehoods from the provided URL (pulling content from some of the linked pages if necessary).
         
         To ensure random selection:
         1. Divide the tools/commands into roughly 100 segments.
@@ -139,7 +139,12 @@ class SecretKnowledgeTidbits:
             raise
 
 if __name__ == "__main__":
-    GITHUB_README_URL = "https://raw.githubusercontent.com/trimstray/the-book-of-secret-knowledge/refs/heads/master/README.md"
+    URLS = [
+        "https://github.com/kdeldycke/awesome-falsehood?tab=readme-ov-file",
+        "https://raw.githubusercontent.com/trimstray/the-book-of-secret-knowledge/refs/heads/master/README.md",
+        "https://github.com/you-dont-need/You-Dont-Need-JavaScript?tab=readme-ov-file#you-dont-need-javascript",
+        "https://github.com/mcinglis/c-style"
+    ]
     
-    processor = SecretKnowledgeTidbits(GITHUB_README_URL)
+    processor = SecretKnowledgeTidbits(random.shuffle(URLS)[0])
     processor.run(test_mode=True)
