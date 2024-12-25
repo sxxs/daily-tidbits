@@ -34,6 +34,7 @@ jobs:
         # Run in non-test mode
         python -c "
         from tidbits import SecretKnowledgeTidbits
-        processor = SecretKnowledgeTidbits('https://raw.githubusercontent.com/trimstray/the-book-of-secret-knowledge/refs/heads/master/README.md')
+        from tidbits import get_url
+        processor = SecretKnowledgeTidbits(get_url())
         processor.run(test_mode=False)
         "

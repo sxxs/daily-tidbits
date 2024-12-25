@@ -139,16 +139,19 @@ class SecretKnowledgeTidbits:
             print(f"Error running tidbit processor: {e}")
             raise
 
-if __name__ == "__main__":
-    URLS = [
+def get_url() -> str:
+    urls = [
         "https://github.com/kdeldycke/awesome-falsehood?tab=readme-ov-file",
         "https://raw.githubusercontent.com/trimstray/the-book-of-secret-knowledge/refs/heads/master/README.md",
         "https://github.com/you-dont-need/You-Dont-Need-JavaScript?tab=readme-ov-file#you-dont-need-javascript",
         "https://github.com/mcinglis/c-style"
     ]
     
-    random.shuffle(URLS)
-    url = URLS.pop()
+    url = random.shuffle(urls)
+    url = urls.pop()
     print(f"Using {url} this time.")
-    processor = SecretKnowledgeTidbits(url)
-    processor.run(test_mode=False)
+    return url
+    
+if __name__ == "__main__":
+    processor = SecretKnowledgeTidbits(get_url())
+    processor.run(test_mode=True)
