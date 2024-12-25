@@ -11,7 +11,7 @@ class SecretKnowledgeTidbits:
         self.readme_url = readme_url
         self.sendgrid_api_key = os.environ.get('SENDGRID_API_KEY')
         self.recipient_email = os.environ.get('RECIPIENT_EMAIL')
-        self.sender_email = os.environ.get('SENDER_EMAIL', 'daily-tidbits@secretknowledge.com')
+        self.sender_email = os.environ.get('SENDER_EMAIL')
     
     def get_daily_tidbits(self) -> str:
         """Use LLM to extract and explain three random tidbits."""
@@ -146,5 +146,6 @@ if __name__ == "__main__":
         "https://github.com/mcinglis/c-style"
     ]
     
-    processor = SecretKnowledgeTidbits(random.shuffle(URLS)[0])
-    processor.run(test_mode=True)
+    random.shuffle(URLS)
+    processor = SecretKnowledgeTidbits(URLS.pop())
+    processor.run(test_mode=False)
