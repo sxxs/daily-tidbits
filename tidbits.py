@@ -5,6 +5,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email, To, Content
 import markdown
 import json
+from sys import exit
 
 class SecretKnowledgeTidbits:
     def __init__(self, readme_url: str):
@@ -147,5 +148,7 @@ if __name__ == "__main__":
     ]
     
     random.shuffle(URLS)
-    processor = SecretKnowledgeTidbits(URLS.pop())
+    url = URLS.pop()
+    print(f"Using {url} this time.")
+    processor = SecretKnowledgeTidbits(url)
     processor.run(test_mode=False)
