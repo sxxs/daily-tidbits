@@ -1,16 +1,18 @@
 import subprocess
 import os
 import random
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, Email, To, Content
 import markdown
 import json
 from sys import exit
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 class SecretKnowledgeTidbits:
     def __init__(self, readme_url: str):
         self.readme_url = readme_url
-        self.sendgrid_api_key = os.environ.get('SENDGRID_API_KEY')
+        self.gmail_user = os.environ.get('GMAIL_USER')
+        self.gmail_app_password = os.environ.get('GMAIL_APP_PASSWORD')
         self.recipient_email = os.environ.get('RECIPIENT_EMAIL')
         self.sender_email = os.environ.get('SENDER_EMAIL')
     
@@ -51,9 +53,9 @@ class SecretKnowledgeTidbits:
             return None
     
     def send_email(self, markdown_content: str) -> bool:
-        """Send email using SendGrid."""
-        if not all([self.sendgrid_api_key, self.recipient_email]):
-            raise ValueError("SendGrid API key and recipient email are required")
+        """Send email using Gmail SMTP."""
+        if not all([self.gmail_user, self.gmail_app_password, self.recipient_email]):
+            raise ValueError("Gmail credentials and recipient email are required")
         
         try:
             # Convert markdown to HTML
@@ -62,7 +64,7 @@ class SecretKnowledgeTidbits:
                 extensions=['fenced_code', 'tables', 'codehilite']
             )
             
-            # Add some basic CSS for better formatting
+            # Add styling
             styled_html = f"""
             <html>
                 <head>
@@ -98,17 +100,22 @@ class SecretKnowledgeTidbits:
             </html>
             """
             
-            message = Mail(
-                from_email=self.sender_email,
-                to_emails=self.recipient_email,
-                subject='🔧 Daily Secret Knowledge Tidbits',
-                html_content=styled_html
-            )
+            # Create message
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = '🔧 Daily Tidbits'
+            msg['From'] = self.gmail_user
+            msg['To'] = self.recipient_email
             
-            sg = SendGridAPIClient(self.sendgrid_api_key)
-            response = sg.send(message)
+            # Add both plain text and HTML versions
+            msg.attach(MIMEText(markdown_content, 'plain'))
+            msg.attach(MIMEText(styled_html, 'html'))
             
-            return response.status_code == 202
+            # Send email
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+                smtp.login(self.gmail_user, self.gmail_app_password)
+                smtp.send_message(msg)
+            
+            return True
             
         except Exception as e:
             print(f"Error sending email: {e}")
